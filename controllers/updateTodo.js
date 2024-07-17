@@ -1,32 +1,29 @@
-//import th model
-const Todo = require("../models/Todo");
+const Todo = require('../models/Todo');
 
-//define route handler
-exports.updateTodo = async(req,res) => {
-    try {
-        const {id} = req.params;
-        const {title, description} = req.body;
-
-        const todo = await Todo.findByIdAndUpdate(
+exports.updateTodo = async(req,res)=>{
+    try{
+        const {title,description}=req.body;
+        const id = req.params.id;
+        const updated=await Todo.findOneAndUpdate(
             {_id:id},
-            {title, description, updatedAt: Date.now()},
-            {new: true}
-        )
-
+            {title,description,updatedAt:Date.now()},{new:true});
+        // const newTodo=await Todo.create({title,description});
         res.status(200).json({
             success:true,
-            data:todo,
-            message: `Updated Successfully`,
-           })
-            
+            data:updated,
+            message:"Updated created",
+        })
     }
     catch(err) {
         console.error(err);
+        console.log(err);
         res.status(500)
         .json({
             success:false,
-            error:err.message,
-            message:'Server Error',
-        });
+            data:"internal server error",
+            message:err.message,
+        })
     }
+
+
 }
